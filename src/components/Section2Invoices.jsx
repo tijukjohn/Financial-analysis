@@ -28,15 +28,17 @@ const Section2Invoices = ({ state, updateState, results }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded text-yellow-800 text-sm flex items-start">
+      <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded text-amber-800 text-sm flex items-start">
         <Info className="w-5 h-5 mr-3 shrink-0 mt-0.5" />
-        <p><strong>Guidance:</strong> Enter individual invoice lines. Orange fields are manual inputs. Green fields are auto-calculated.</p>
+        <div>
+          <p className="font-bold mb-1">What to enter here:</p>
+          <p>Enter individual invoice lines from your past outsourced projects. Orange fields are manual inputs. Green fields are auto-calculated margins.</p>
+        </div>
       </div>
 
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-navy-900">Sheet 3: Vendor Invoice Data</h2>
-          <p className="text-slate-500 text-sm mt-1">Capture outsourcing costs and client margins.</p>
+          <h2 className="text-2xl font-bold text-navy-900">Sheet 2: Enter past invoices to calculate how much GDMR earns per project after vendor costs.</h2>
         </div>
         <button 
           onClick={handleAdd}
@@ -73,26 +75,26 @@ const Section2Invoices = ({ state, updateState, results }) => {
               return (
                 <tr key={inv.id} className="hover:bg-slate-50">
                   <td className="px-4 py-2">
-                    <input type="text" value={inv.campaignName} onChange={(e) => handleChange(inv.id, 'campaignName', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
+                    <input type="text" placeholder="e.g. Annual Event Promo" value={inv.campaignName} onChange={(e) => handleChange(inv.id, 'campaignName', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
                   </td>
                   <td className="px-4 py-2">
-                    <input type="text" value={inv.code} onChange={(e) => handleChange(inv.id, 'code', e.target.value)} className="w-32 border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
+                    <input type="text" placeholder="EVT-101" value={inv.code} onChange={(e) => handleChange(inv.id, 'code', e.target.value)} className="w-32 border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
                   </td>
                   <td className="px-4 py-2">
-                    <input type="text" value={inv.clientCode} onChange={(e) => handleChange(inv.id, 'clientCode', e.target.value)} className="w-32 border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
+                    <input type="text" placeholder="CLI-A" value={inv.clientCode} onChange={(e) => handleChange(inv.id, 'clientCode', e.target.value)} className="w-32 border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
                   </td>
                   <td className="px-4 py-2">
                     <input type="date" value={inv.date} onChange={(e) => handleChange(inv.id, 'date', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
                   </td>
                   <td className="px-4 py-2">
-                    <input type="number" value={inv.subTotal || ''} onChange={(e) => handleChange(inv.id, 'subTotal', parseFloat(e.target.value))} className="w-28 border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
+                    <input type="number" placeholder="4661" value={inv.subTotal || ''} onChange={(e) => handleChange(inv.id, 'subTotal', parseFloat(e.target.value))} className="w-28 border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
                   </td>
                   <td className="px-4 py-2">
-                    <input type="number" value={inv.gstAmount || ''} onChange={(e) => handleChange(inv.id, 'gstAmount', parseFloat(e.target.value))} className="w-24 border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
+                    <input type="number" placeholder="839" value={inv.gstAmount || ''} onChange={(e) => handleChange(inv.id, 'gstAmount', parseFloat(e.target.value))} className="w-24 border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
                   </td>
                   <td className="px-4 py-3 font-bold text-green-700 bg-green-50 rounded">₹{clientAmount.toFixed(0)}</td>
                   <td className="px-4 py-2">
-                    <input type="number" value={inv.costToGDMR || ''} onChange={(e) => handleChange(inv.id, 'costToGDMR', parseFloat(e.target.value))} className="w-28 border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
+                    <input type="number" placeholder="4000" value={inv.costToGDMR || ''} onChange={(e) => handleChange(inv.id, 'costToGDMR', parseFloat(e.target.value))} className="w-28 border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
                   </td>
                   <td className={`px-4 py-3 font-bold rounded ${margin >= 0 ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                     ₹{margin.toFixed(0)}

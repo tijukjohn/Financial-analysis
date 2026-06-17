@@ -24,15 +24,17 @@ const Section5Staff = ({ state, updateState, results }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded text-yellow-800 text-sm flex items-start">
+      <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded text-amber-800 text-sm flex items-start">
         <Info className="w-5 h-5 mr-3 shrink-0 mt-0.5" />
-        <p><strong>Guidance:</strong> Enter the direct labour costs and the annual maintenance contract (AMC) fee. Orange fields are manual inputs. Green fields are auto-calculated.</p>
+        <div>
+          <p className="font-bold mb-1">What to enter here:</p>
+          <p>Enter the direct labour costs and the annual maintenance contract (AMC) fee. Orange fields are manual inputs. Green fields are auto-calculated.</p>
+        </div>
       </div>
 
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-navy-900">Sheet 6: Staff & AMC Costs</h2>
-          <p className="text-slate-500 text-sm mt-1">Direct labour costs and annual maintenance contracts.</p>
+          <h2 className="text-2xl font-bold text-navy-900">Sheet 6: Enter staff salaries to calculate total monthly labour cost.</h2>
         </div>
         <button onClick={handleAdd} className="flex items-center px-4 py-2 bg-accent-orange text-white rounded hover:bg-accent-orange-hover transition-colors font-medium text-sm">
           <Plus className="w-4 h-4 mr-2" /> Add Staff Role
@@ -61,13 +63,13 @@ const Section5Staff = ({ state, updateState, results }) => {
               return (
                 <tr key={s.id} className="hover:bg-slate-50">
                   <td className="px-6 py-2">
-                    <input type="text" value={s.role} onChange={(e) => handleChange(s.id, 'role', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
+                    <input type="text" placeholder="e.g. Production Supervisor" value={s.role} onChange={(e) => handleChange(s.id, 'role', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
                   </td>
                   <td className="px-6 py-2">
-                    <input type="number" value={s.salary || ''} onChange={(e) => handleChange(s.id, 'salary', parseFloat(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 focus:border-accent-orange outline-none" />
+                    <input type="number" placeholder="22000" value={s.salary || ''} onChange={(e) => handleChange(s.id, 'salary', parseFloat(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 focus:border-accent-orange outline-none" />
                   </td>
                   <td className="px-6 py-2">
-                    <input type="number" value={s.count || ''} onChange={(e) => handleChange(s.id, 'count', parseInt(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 focus:border-accent-orange outline-none" />
+                    <input type="number" placeholder="1" value={s.count || ''} onChange={(e) => handleChange(s.id, 'count', parseInt(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 focus:border-accent-orange outline-none" />
                   </td>
                   <td className="px-6 py-3 text-slate-500 bg-green-50 rounded">₹{gross.toLocaleString('en-IN')}</td>
                   <td className="px-6 py-3 text-slate-500 bg-green-50 rounded">₹{epf.toLocaleString('en-IN')}</td>

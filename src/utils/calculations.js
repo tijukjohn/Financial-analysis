@@ -18,13 +18,24 @@ export const calculateTotals = (state) => {
   // 1. Material Rates calculations
   let totalMaterialQty = 0;
   let totalMaterialAmount = 0;
+  let directRateWeightedSum = 0;
+  let hasDirectRate = false;
 
   (materialRates || []).forEach(mr => {
-    totalMaterialQty += (mr.quantity || 0);
+    const qty = mr.quantity || 0;
+    totalMaterialQty += qty;
     totalMaterialAmount += (mr.amount || 0);
+    if (mr.directRate > 0) {
+      hasDirectRate = true;
+      directRateWeightedSum += (mr.directRate * qty);
+    }
   });
 
-  const averageVendorRate = totalMaterialQty > 0 ? totalMaterialAmount / totalMaterialQty : 15;
+  const methodARate = totalMaterialQty > 0 ? totalMaterialAmount / totalMaterialQty : 15;
+  const methodBRate = totalMaterialQty > 0 ? directRateWeightedSum / totalMaterialQty : methodARate;
+  
+  const averageVendorRate = hasDirectRate ? methodBRate : methodARate;
+  const vendorRateMethod = hasDirectRate ? 'Method B (Direct)' : 'Method A (Calculated)';
 
   // 1b. Vendor Invoices calculations
   let totalVendorCost = 0;
@@ -66,19 +77,34 @@ export const calculateTotals = (state) => {
 
   // 3. Ink & Media (calculate blended cost per sq.ft)
   let blendedConsumableCostPerSqFt = 0;
-  let consumableTypes = 0;
   const sqMtoSqFt = 10.76;
   
   inkMedia.forEach(item => {
     let estCost = 0;
     if (item.unit === 'litre' && item.coverage) {
       estCost = item.price / (item.coverage * sqMtoSqFt);
+      // Assume inks apply to all prints
+      blendedConsumableCostPerSqFt += estCost;
     } else if (item.unit === 'sq.m') {
       estCost = (item.price / sqMtoSqFt) * (item.coverage || 1);
-    }
-    if (estCost > 0) {
-      blendedConsumableCostPerSqFt += estCost;
-      consumableTypes++;
+      
+      // Match with Sheet 1 to get % share
+      let matchedShare = 1; // Default to 100% if no match logic found
+      
+      // Try to find a matching material in Sheet 1 (case insensitive, partial match)
+      const itemNameLower = item.name.toLowerCase();
+      const foundMr = (materialRates || []).find(mr => {
+        const mrNameLower = mr.name.toLowerCase();
+        // check if words overlap
+        return mrNameLower.includes(itemNameLower) || itemNameLower.includes(mrNameLower) || 
+               itemNameLower.split(' ').some(w => w.length > 3 && mrNameLower.includes(w));
+      });
+      
+      if (foundMr && totalMaterialQty > 0) {
+        matchedShare = (foundMr.quantity || 0) / totalMaterialQty;
+      }
+      
+      blendedConsumableCostPerSqFt += (estCost * matchedShare);
     }
   });
   
@@ -99,7 +125,8 @@ export const calculateTotals = (state) => {
   const monthlyAMC = (annualAMC || 0) / 12;
 
   // Annual OpEx Summary
-  const annualConsumables = monthlyInkMediaCost * 12; 
+  const isUsingInkOverride = monthlyInkMediaCost > 0;
+  const annualConsumables = isUsingInkOverride ? (monthlyInkMediaCost * 12) : (blendedConsumableCostPerSqFt * annualProductionVolume); 
   const annualElectricity = monthlyElectricity * 12;
   const annualLabour = totalMonthlyLabour * 12;
   const totalAnnualOpEx = annualConsumables + annualElectricity + annualLabour + annualAMC;
@@ -198,6 +225,8 @@ export const calculateTotals = (state) => {
   });
 
   return {
+    isUsingInkOverride,
+    vendorRateMethod,
     averageVendorRate,
     totalVendorCost,
     averageMarginPercent,
@@ -229,6 +258,10 @@ export const calculateTotals = (state) => {
 };
 
 function calculateIRR(cashFlows) {
+  // If all cash flows are negative, return 'N/A'
+  const allNegative = cashFlows.every(cf => cf <= 0);
+  if (allNegative) return 'N/A';
+
   let rate = 0.1;
   const maxIterations = 100;
   const precision = 0.00001;
@@ -242,9 +275,10 @@ function calculateIRR(cashFlows) {
         derivative -= t * cashFlows[t] / Math.pow(1 + rate, t + 1);
       }
     }
+    if (derivative === 0) return 'N/A';
     const newRate = rate - npv / derivative;
     if (Math.abs(newRate - rate) < precision) return newRate * 100;
     rate = newRate;
   }
-  return rate * 100;
+  return 'N/A'; // Did not converge
 }

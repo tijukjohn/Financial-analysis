@@ -10,13 +10,16 @@ const Section4Electricity = ({ state, updateState, results }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded text-yellow-800 text-sm flex items-start">
+      <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded text-amber-800 text-sm flex items-start">
         <Info className="w-5 h-5 mr-3 shrink-0 mt-0.5" />
-        <p><strong>Guidance:</strong> Since the unit is pre-operational, electricity cost is estimated using machine power ratings and assumed running hours — consistent with Yudistira (2024) methodology.</p>
+        <div>
+          <p className="font-bold mb-1">What to enter here:</p>
+          <p>Enter the power rating (kW) and estimated running hours per day for each machine to calculate electricity OpEx. Orange fields are manual inputs.</p>
+        </div>
       </div>
 
       <div>
-        <h2 className="text-2xl font-bold text-navy-900">Sheet 5: Electricity Cost (Estimated)</h2>
+        <h2 className="text-2xl font-bold text-navy-900">Sheet 5: Enter machine power ratings to estimate monthly electricity cost.</h2>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -67,10 +70,10 @@ const Section4Electricity = ({ state, updateState, results }) => {
                 <tr key={item.id} className="hover:bg-slate-50">
                   <td className="px-6 py-3 font-medium text-slate-700">{item.name}</td>
                   <td className="px-6 py-2">
-                    <input type="number" step="0.1" value={item.power || ''} onChange={(e) => handleChange(item.id, 'power', parseFloat(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
+                    <input type="number" placeholder="2.0" step="0.1" value={item.power || ''} onChange={(e) => handleChange(item.id, 'power', parseFloat(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
                   </td>
                   <td className="px-6 py-2">
-                    <input type="number" step="0.5" value={item.hours || ''} onChange={(e) => handleChange(item.id, 'hours', parseFloat(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
+                    <input type="number" placeholder="6" step="0.5" value={item.hours || ''} onChange={(e) => handleChange(item.id, 'hours', parseFloat(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 outline-none focus:border-accent-orange" />
                   </td>
                   <td className="px-6 py-3 font-semibold text-green-700 bg-green-50 rounded">{monthlyKwh.toFixed(1)}</td>
                   <td className="px-6 py-3 font-semibold text-green-700 bg-green-100 rounded">₹{cost.toFixed(0)}</td>

@@ -19,7 +19,6 @@ import Section2CapEx from './components/Section2CapEx';
 import Section3InkMedia from './components/Section3InkMedia';
 import Section4Electricity from './components/Section4Electricity';
 import Section5Staff from './components/Section5Staff';
-import Section6Dashboard from './components/Section6Dashboard';
 import Section7FinancialCalc from './components/Section7FinancialCalc';
 import Section8RiskAnalysis from './components/Section8RiskAnalysis';
 
@@ -61,9 +60,8 @@ function App() {
     { id: 4, name: 'Ink & Media', icon: Droplets },
     { id: 5, name: 'Electricity', icon: Zap },
     { id: 6, name: 'Staff Costs', icon: Users },
-    { id: 7, name: 'Dashboard', icon: LineChart },
-    { id: 8, name: 'Financial Calculations', icon: FileText },
-    { id: 9, name: 'Risk Analysis', icon: AlertTriangle },
+    { id: 7, name: 'Financial Calculations', icon: FileText },
+    { id: 8, name: 'Risk Analysis', icon: AlertTriangle },
   ];
 
   return (
@@ -134,7 +132,7 @@ function App() {
             <div>
               <p className="text-xs text-slate-500 font-medium uppercase">IRR</p>
               <p className={`text-lg font-bold ${results.irr > state.discountRate ? 'text-green-600' : 'text-red-500'}`}>
-                {results.irr.toFixed(1)}%
+                {isNaN(results.irr) ? 'N/A' : `${results.irr.toFixed(1)}%`}
               </p>
             </div>
             <div>
@@ -163,9 +161,8 @@ function App() {
             {activeTab === 4 && <Section3InkMedia state={state} updateState={updateState} results={results} />}
             {activeTab === 5 && <Section4Electricity state={state} updateState={updateState} results={results} />}
             {activeTab === 6 && <Section5Staff state={state} updateState={updateState} results={results} />}
-            {activeTab === 7 && <Section6Dashboard state={state} updateState={updateState} results={results} />}
-            {activeTab === 8 && <Section7FinancialCalc state={state} updateState={updateState} results={results} />}
-            {activeTab === 9 && <Section8RiskAnalysis state={state} updateState={updateState} results={results} />}
+            {activeTab === 7 && <Section7FinancialCalc state={state} updateState={updateState} results={results} />}
+            {activeTab === 8 && <Section8RiskAnalysis state={state} updateState={updateState} results={results} />}
           </div>
         </div>
 

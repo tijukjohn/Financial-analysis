@@ -28,15 +28,17 @@ const Section3InkMedia = ({ state, updateState, results }) => {
 
   return (
     <div className="space-y-6 animate-fadeIn">
-      <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded text-yellow-800 text-sm flex items-start">
+      <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded text-amber-800 text-sm flex items-start">
         <Info className="w-5 h-5 mr-3 shrink-0 mt-0.5" />
-        <p><strong>Guidance:</strong> Enter the price per unit for each consumable. For inks, enter the coverage/yield per litre. Orange fields are manual inputs. Green fields are auto-calculated.</p>
+        <div>
+          <p className="font-bold mb-1">What to enter here:</p>
+          <p>Enter the price per unit for each consumable. For inks, enter the coverage/yield per litre. Orange fields are manual inputs. Green fields are auto-calculated.</p>
+        </div>
       </div>
 
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-navy-900">Sheet 4: Ink & Media Costs</h2>
-          <p className="text-slate-500 text-sm mt-1">Cost breakdown of raw materials and consumables.</p>
+          <h2 className="text-2xl font-bold text-navy-900">Sheet 4: Enter consumable prices to calculate the raw material cost per sq.ft in-house.</h2>
         </div>
         <button onClick={handleAdd} className="flex items-center px-4 py-2 bg-accent-orange text-white rounded hover:bg-accent-orange-hover transition-colors font-medium text-sm">
           <Plus className="w-4 h-4 mr-2" /> Add Consumable
@@ -68,13 +70,13 @@ const Section3InkMedia = ({ state, updateState, results }) => {
               return (
                 <tr key={item.id} className="hover:bg-slate-50">
                   <td className="px-4 py-2">
-                    <input type="text" value={item.name} onChange={(e) => handleChange(item.id, 'name', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
+                    <input type="text" placeholder="e.g. Eco-Solvent Ink" value={item.name} onChange={(e) => handleChange(item.id, 'name', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" />
                   </td>
                   <td className="px-4 py-2">
                     <input type="text" value={item.desc || ''} onChange={(e) => handleChange(item.id, 'desc', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 outline-none bg-orange-50 focus:border-accent-orange" placeholder="Guidance text" />
                   </td>
                   <td className="px-4 py-2">
-                    <input type="number" value={item.price || ''} onChange={(e) => handleChange(item.id, 'price', parseFloat(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 focus:border-accent-orange outline-none" />
+                    <input type="number" placeholder="800" value={item.price || ''} onChange={(e) => handleChange(item.id, 'price', parseFloat(e.target.value))} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 focus:border-accent-orange outline-none" />
                   </td>
                   <td className="px-4 py-2">
                     <select value={item.unit} onChange={(e) => handleChange(item.id, 'unit', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-white outline-none focus:border-accent-orange">
@@ -98,25 +100,33 @@ const Section3InkMedia = ({ state, updateState, results }) => {
           </tbody>
           <tfoot className="bg-green-100 border-t border-green-200 font-bold">
             <tr>
-              <td colSpan="5" className="px-4 py-4 text-right text-green-900 uppercase tracking-wider text-sm">Total Blended Consumable Cost per Sq.Ft:</td>
+              <td colSpan="5" className="px-4 py-4 text-right text-green-900 uppercase tracking-wider text-sm">Weighted Blended Consumable Cost per Sq.Ft:</td>
               <td colSpan="2" className="px-4 py-4 text-xl text-green-700">₹{results.blendedConsumableCostPerSqFt.toFixed(2)}</td>
             </tr>
           </tfoot>
         </table>
       </div>
 
-      <div className="bg-navy-900 text-white p-6 rounded-lg shadow-lg flex justify-between items-center mt-8">
+      <div className={`p-6 rounded-lg shadow-lg flex justify-between items-center mt-8 border-2 ${results.isUsingInkOverride ? 'bg-amber-50 border-amber-400' : 'bg-slate-50 border-slate-200'}`}>
         <div>
-          <h3 className="text-lg font-bold text-accent-orange">Monthly Ink & Media OpEx (Override)</h3>
-          <p className="text-slate-300 text-sm">Enter the expected total monthly spend for the OpEx calculation.</p>
+          <h3 className="text-lg font-bold text-slate-800">Monthly Ink & Media Cost Override (Rs.)</h3>
+          <p className="text-slate-600 text-sm mt-1">Enter actual monthly spend if known. Leave blank to use calculated value.</p>
+          <div className="mt-2">
+            {results.isUsingInkOverride ? (
+              <span className="bg-amber-500 text-white text-xs font-bold px-2 py-1 rounded">Using override</span>
+            ) : (
+              <span className="bg-slate-400 text-white text-xs font-bold px-2 py-1 rounded">Using calculated value</span>
+            )}
+          </div>
         </div>
         <div className="flex items-center">
-          <span className="text-xl text-slate-300 mr-2">₹</span>
+          <span className="text-xl text-slate-500 mr-2">₹</span>
           <input 
             type="number" 
+            placeholder="e.g. 25000"
             value={state.monthlyInkMediaCost || ''} 
-            onChange={(e) => updateState('monthlyInkMediaCost', parseFloat(e.target.value))}
-            className="w-40 bg-slate-800 border-2 border-accent-orange rounded px-3 py-2 text-xl font-bold text-accent-orange outline-none focus:bg-slate-700 text-right"
+            onChange={(e) => updateState('monthlyInkMediaCost', parseFloat(e.target.value) || 0)}
+            className="w-48 bg-white border-2 border-orange-300 rounded px-3 py-2 text-xl font-bold text-slate-800 outline-none focus:border-accent-orange text-right"
           />
         </div>
       </div>

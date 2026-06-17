@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   BarChart as RechartsBarChart, 
   Bar, 
@@ -10,9 +10,11 @@ import {
   ReferenceLine, 
   Cell 
 } from 'recharts';
-import { Info, AlertTriangle } from 'lucide-react';
+import { Info, AlertTriangle, ChevronDown, ChevronUp } from 'lucide-react';
 
 const Section8RiskAnalysis = ({ state, results }) => {
+  const [showSensitivity, setShowSensitivity] = useState(false);
+  const [showScenario, setShowScenario] = useState(false);
   const { averageVendorRate, annualConsumables, totalCapEx, annualDepreciation, annualLabour, annualElectricity } = results;
   const { annualProductionVolume, discountRate, residualValuePercentage } = state;
 
@@ -108,32 +110,45 @@ const Section8RiskAnalysis = ({ state, results }) => {
         
         {/* A. Sensitivity Table */}
         <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-          <h3 className="text-lg font-bold text-slate-700 mb-4">(A) Sensitivity Table (±20%)</h3>
-          <table className="w-full text-sm text-left">
-            <thead className="bg-slate-50 border-b border-slate-200">
-              <tr>
-                <th className="px-4 py-3">Variable</th>
-                <th className="px-4 py-3 text-right">NPV at -20%</th>
-                <th className="px-4 py-3 text-right">NPV at +20%</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {sensitivityData.map(row => (
-                <tr key={row.variable} className="hover:bg-slate-50">
-                  <td className="px-4 py-3 font-medium text-slate-700">{row.variable}</td>
-                  <td className={`px-4 py-3 text-right font-bold ${row.down < 0 ? 'text-red-500' : 'text-slate-700'}`}>
-                    ₹{Math.round(row.down).toLocaleString('en-IN')}
-                  </td>
-                  <td className={`px-4 py-3 text-right font-bold ${row.up < 0 ? 'text-red-500' : 'text-slate-700'}`}>
-                    ₹{Math.round(row.up).toLocaleString('en-IN')}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div className="mt-4 p-3 bg-slate-50 border border-slate-100 rounded text-sm text-slate-600">
-            <strong>Base NPV:</strong> <span className="font-bold text-slate-800">₹{Math.round(baseNPV).toLocaleString('en-IN')}</span>
+          <div className="flex justify-between items-center cursor-pointer mb-4" onClick={() => setShowSensitivity(!showSensitivity)}>
+            <h3 className="text-lg font-bold text-slate-700 flex items-center">
+              (A) Sensitivity Table (±20%)
+              <span className="text-slate-400 text-xs ml-2 font-normal">(Click to {showSensitivity ? 'collapse' : 'expand'})</span>
+            </h3>
+            <button className="text-slate-400 hover:text-navy-900 transition-colors">
+              {showSensitivity ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+            </button>
           </div>
+          
+          {showSensitivity && (
+            <div className="animate-fadeIn">
+              <table className="w-full text-sm text-left">
+                <thead className="bg-slate-50 border-b border-slate-200">
+                  <tr>
+                    <th className="px-4 py-3">Variable</th>
+                    <th className="px-4 py-3 text-right">NPV at -20%</th>
+                    <th className="px-4 py-3 text-right">NPV at +20%</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {sensitivityData.map(row => (
+                    <tr key={row.variable} className="hover:bg-slate-50">
+                      <td className="px-4 py-3 font-medium text-slate-700">{row.variable}</td>
+                      <td className={`px-4 py-3 text-right font-bold ${row.down < 0 ? 'text-red-500' : 'text-slate-700'}`}>
+                        ₹{Math.round(row.down).toLocaleString('en-IN')}
+                      </td>
+                      <td className={`px-4 py-3 text-right font-bold ${row.up < 0 ? 'text-red-500' : 'text-slate-700'}`}>
+                        ₹{Math.round(row.up).toLocaleString('en-IN')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <div className="mt-4 p-3 bg-slate-50 border border-slate-100 rounded text-sm text-slate-600">
+                <strong>Base NPV:</strong> <span className="font-bold text-slate-800">₹{Math.round(baseNPV).toLocaleString('en-IN')}</span>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* B. Tornado Chart */}
@@ -166,11 +181,19 @@ const Section8RiskAnalysis = ({ state, results }) => {
 
       {/* C. Scenario Analysis */}
       <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-bold text-slate-700">(C) Scenario Analysis (Capacity Utilisation)</h3>
+        <div className="flex justify-between items-center cursor-pointer mb-4" onClick={() => setShowScenario(!showScenario)}>
+          <h3 className="text-lg font-bold text-slate-700 flex items-center">
+            (C) Scenario Analysis (Capacity Utilisation)
+            <span className="text-slate-400 text-xs ml-2 font-normal">(Click to {showScenario ? 'collapse' : 'expand'})</span>
+          </h3>
+          <button className="text-slate-400 hover:text-navy-900 transition-colors">
+            {showScenario ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+          </button>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left">
+        
+        {showScenario && (
+          <div className="overflow-x-auto animate-fadeIn">
+            <table className="w-full text-sm text-left">
             <thead className="bg-slate-50 border-b border-slate-200">
               <tr>
                 <th className="px-4 py-3">Scenario</th>
@@ -198,9 +221,9 @@ const Section8RiskAnalysis = ({ state, results }) => {
                   </td>
                   <td className="px-4 py-4">
                     {sc.npv > 0 ? (
-                      <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-bold">Feasible</span>
+                      <span className="bg-green-100 text-green-700 px-2 py-1 rounded font-bold text-xs">Viable</span>
                     ) : (
-                      <span className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">High Risk</span>
+                      <span className="bg-red-100 text-red-700 px-2 py-1 rounded font-bold text-xs">Not Viable</span>
                     )}
                   </td>
                 </tr>
@@ -208,6 +231,7 @@ const Section8RiskAnalysis = ({ state, results }) => {
             </tbody>
           </table>
         </div>
+        )}
       </div>
 
     </div>
