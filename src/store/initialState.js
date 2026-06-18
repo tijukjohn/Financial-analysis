@@ -5,6 +5,7 @@ export const defaultState = {
   discountRate: 12,
   annualProductionVolume: 8000,
   residualValuePercentage: 15,
+  isGSTClaimable: false,
   
   // Section 1: Material Rates
   materialRates: [
@@ -52,14 +53,14 @@ export const defaultState = {
 
   // Section 3: Ink & Media
   inkMedia: [
-    { id: 'im-1', name: 'Eco-Solvent Ink', desc: 'For flex/vinyl printing', unit: 'litre', price: 800, coverage: 27.5 },
-    { id: 'im-2', name: 'UV-Curable Ink', desc: 'For flatbed printing', unit: 'litre', price: 3000, coverage: 17.5 },
-    { id: 'im-3', name: 'Frontlit Flex', desc: 'Standard banner material', unit: 'sq.m', price: 40, coverage: null },
-    { id: 'im-4', name: 'Self-Adhesive Vinyl', desc: 'Sticker material', unit: 'sq.m', price: 60, coverage: null },
-    { id: 'im-5', name: 'Backlit Film', desc: 'For glow signs', unit: 'sq.m', price: 80, coverage: null },
-    { id: 'im-6', name: 'Cold Laminate', desc: 'Protective film', unit: 'sq.m', price: 50, coverage: 0.6 },
-    { id: 'im-7', name: 'Cleaning Solution', desc: 'Head maintenance', unit: 'litre', price: 500, coverage: 0.5 },
-    { id: 'im-8', name: 'Foam Board', desc: 'Mounting board', unit: 'sq.m', price: 120, coverage: null }
+    { id: 'im-1', name: 'Eco-Solvent Ink', desc: 'For flex/vinyl printing', unit: 'litre', price: 800, coverage: 27.5, materialLink: '' },
+    { id: 'im-2', name: 'UV-Curable Ink', desc: 'For flatbed printing', unit: 'litre', price: 3000, coverage: 17.5, materialLink: '' },
+    { id: 'im-3', name: 'Frontlit Flex', desc: 'Standard banner material', unit: 'sq.m', price: 40, coverage: null, materialLink: '' },
+    { id: 'im-4', name: 'Self-Adhesive Vinyl', desc: 'Sticker material', unit: 'sq.m', price: 60, coverage: null, materialLink: '' },
+    { id: 'im-5', name: 'Backlit Film', desc: 'For glow signs', unit: 'sq.m', price: 80, coverage: null, materialLink: '' },
+    { id: 'im-6', name: 'Cold Laminate', desc: 'Protective film', unit: 'sq.m', price: 50, coverage: 0.6, materialLink: '' },
+    { id: 'im-7', name: 'Cleaning Solution', desc: 'Head maintenance', unit: 'litre', price: 500, coverage: 0.5, materialLink: '' },
+    { id: 'im-8', name: 'Foam Board', desc: 'Mounting board', unit: 'sq.m', price: 120, coverage: null, materialLink: '' }
   ],
 
   // Override for monthly

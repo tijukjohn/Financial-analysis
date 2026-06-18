@@ -33,7 +33,7 @@ const Section1MaterialRates = ({ state, updateState, results }) => {
         <Info className="w-5 h-5 mr-3 shrink-0 mt-0.5" />
         <div>
           <p className="font-bold mb-1">What to enter here:</p>
-          <p>Enter the print materials you sell and the total volume sold to clients. You can either enter the total revenue received (Amount) OR the direct vendor rate per sq.ft.</p>
+          <p>This is your benchmark outsourcing cost, calculated from total annual sq.ft delivered to clients across all material types and the total amount earned. This is more reliable than per-invoice sq.ft because individual invoices often mix multiple materials.</p>
         </div>
       </div>
 

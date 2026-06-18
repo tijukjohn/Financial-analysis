@@ -2,7 +2,7 @@ import React from 'react';
 import { Plus, Trash2, Info } from 'lucide-react';
 
 const Section3InkMedia = ({ state, updateState, results }) => {
-  const { inkMedia = [] } = state;
+  const { inkMedia = [], materialRates = [] } = state;
 
   const handleAdd = () => {
     const newItem = {
@@ -54,6 +54,7 @@ const Section3InkMedia = ({ state, updateState, results }) => {
               <th className="px-4 py-3 font-medium w-32">Price (₹)</th>
               <th className="px-4 py-3 font-medium w-32">Unit</th>
               <th className="px-4 py-3 font-medium w-40">Coverage/Yield</th>
+              <th className="px-4 py-3 font-medium w-48">Link to Material (Sheet 1)</th>
               <th className="px-4 py-3 font-medium w-32 text-green-700">Cost / Sq.Ft</th>
               <th className="px-4 py-3 w-12"></th>
             </tr>
@@ -88,6 +89,14 @@ const Section3InkMedia = ({ state, updateState, results }) => {
                   <td className="px-4 py-2">
                     <input type="number" step="0.1" value={item.coverage === null ? '' : item.coverage} onChange={(e) => handleChange(item.id, 'coverage', e.target.value ? parseFloat(e.target.value) : null)} placeholder="Rate/Yield" className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-orange-50 focus:border-accent-orange outline-none" />
                   </td>
+                  <td className="px-4 py-2">
+                    <select value={item.materialLink || ''} onChange={(e) => handleChange(item.id, 'materialLink', e.target.value)} className="w-full border-2 border-orange-200 rounded px-2 py-1 bg-white outline-none focus:border-accent-orange">
+                      <option value="">-- Shared / Unmatched --</option>
+                      {materialRates.map(mr => (
+                        mr.name ? <option key={mr.id} value={mr.name}>{mr.name}</option> : null
+                      ))}
+                    </select>
+                  </td>
                   <td className="px-4 py-3 font-semibold text-green-700 bg-green-50 rounded">₹{estCost ? estCost.toFixed(2) : '-'}</td>
                   <td className="px-4 py-3 text-right">
                     <button onClick={() => handleRemove(item.id)} className="text-slate-400 hover:text-red-500">
@@ -100,7 +109,7 @@ const Section3InkMedia = ({ state, updateState, results }) => {
           </tbody>
           <tfoot className="bg-green-100 border-t border-green-200 font-bold">
             <tr>
-              <td colSpan="5" className="px-4 py-4 text-right text-green-900 uppercase tracking-wider text-sm">Weighted Blended Consumable Cost per Sq.Ft:</td>
+              <td colSpan="6" className="px-4 py-4 text-right text-green-900 uppercase tracking-wider text-sm">Weighted Blended Consumable Cost per Sq.Ft:</td>
               <td colSpan="2" className="px-4 py-4 text-xl text-green-700">₹{results.blendedConsumableCostPerSqFt.toFixed(2)}</td>
             </tr>
           </tfoot>

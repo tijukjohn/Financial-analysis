@@ -3,7 +3,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { Plus, Trash2, Info, ChevronDown, ChevronUp } from 'lucide-react';
 
 const Section2CapEx = ({ state, updateState, results }) => {
-  const { machines } = state;
+  const { machines, isGSTClaimable } = state;
   const [showDepreciation, setShowDepreciation] = useState(false);
 
   const handleAdd = () => {
@@ -44,6 +44,33 @@ const Section2CapEx = ({ state, updateState, results }) => {
         </button>
       </div>
 
+      <div className="flex justify-between items-center bg-white p-4 rounded-lg shadow-sm border border-slate-200">
+        <div>
+          <h3 className="font-bold text-slate-800 flex items-center">
+            GST Input Tax Credit Available?
+            <div className="group relative ml-2">
+              <Info className="w-4 h-4 text-slate-400 cursor-help" />
+              <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover:block w-64 p-2 bg-navy-900 text-white text-xs rounded shadow-lg z-10 text-center">
+                Confirm with your accountant whether GDMR is registered under the regular GST scheme (ITC claimable) or composition scheme (ITC not available) before changing this.
+              </div>
+            </div>
+          </h3>
+          <p className="text-sm font-medium mt-1">
+            {isGSTClaimable ? (
+              <span className="text-green-600">Yes - ITC claimable</span>
+            ) : (
+              <span className="text-slate-500">No - GST is a real cost</span>
+            )}
+          </p>
+        </div>
+        <button
+          onClick={() => updateState('isGSTClaimable', !isGSTClaimable)}
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${isGSTClaimable ? 'bg-green-500' : 'bg-slate-300'}`}
+        >
+          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${isGSTClaimable ? 'translate-x-6' : 'translate-x-1'}`} />
+        </button>
+      </div>
+
       <div className="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
         <table className="w-full text-left text-sm">
           <thead className="bg-slate-50 border-b border-slate-200 text-slate-600">
@@ -52,15 +79,19 @@ const Section2CapEx = ({ state, updateState, results }) => {
               <th className="px-4 py-3 font-medium">Description / What to Enter</th>
               <th className="px-4 py-3 font-medium w-32">Cost (₹)</th>
               <th className="px-4 py-3 font-medium w-24">GST Rate %</th>
-              <th className="px-4 py-3 font-medium w-32 text-green-700">GST Amount</th>
-              <th className="px-4 py-3 font-medium w-32 text-green-700">Total incl. GST</th>
+              <th className="px-4 py-3 font-medium w-32 text-green-700">
+                {isGSTClaimable ? 'GST (recoverable via ITC - excluded from CapEx)' : 'GST Amount'}
+              </th>
+              <th className="px-4 py-3 font-medium w-32 text-green-700">
+                {isGSTClaimable ? 'Net Cost (Excl. GST)' : 'Total incl. GST'}
+              </th>
               <th className="px-4 py-3 w-12"></th>
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
             {machines.map((m) => {
               const gstAmt = (m.cost || 0) * ((m.gstRate || 0) / 100);
-              const total = (m.cost || 0) + gstAmt;
+              const total = (m.cost || 0) + (isGSTClaimable ? 0 : gstAmt);
               return (
                 <tr key={m.id} className="hover:bg-slate-50">
                   <td className="px-4 py-2">
@@ -88,7 +119,9 @@ const Section2CapEx = ({ state, updateState, results }) => {
           </tbody>
           <tfoot className="bg-green-100 border-t border-green-200 font-bold">
             <tr>
-              <td colSpan="5" className="px-4 py-4 text-right text-green-900 uppercase tracking-wider text-sm">Total CapEx (incl. GST):</td>
+              <td colSpan="5" className="px-4 py-4 text-right text-green-900 uppercase tracking-wider text-sm">
+                {isGSTClaimable ? 'Total CapEx (Excl. GST):' : 'Total CapEx (incl. GST):'}
+              </td>
               <td colSpan="2" className="px-4 py-4 text-xl text-green-700">₹{results.totalCapEx.toLocaleString('en-IN')}</td>
             </tr>
           </tfoot>

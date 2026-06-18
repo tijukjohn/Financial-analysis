@@ -137,17 +137,17 @@ function App() {
             </div>
             <div>
               <p className="text-xs text-slate-500 font-medium uppercase">Payback</p>
-              <p className={`text-lg font-bold ${results.paybackMonths < 60 ? 'text-green-600' : 'text-red-500'}`}>
-                {results.paybackMonths > 60 ? '>5 Yrs' : `${(results.paybackMonths/12).toFixed(1)} Yrs`}
+              <p className={`text-lg font-bold ${results.paybackMonths <= 60 ? 'text-green-600' : 'text-red-500'}`}>
+                {results.paybackMonths > 60 ? 'Beyond 5 Yrs' : `${(results.paybackMonths/12).toFixed(1)} Yrs`}
               </p>
             </div>
           </div>
           <div className="flex space-x-3 text-sm font-medium">
             <div className={`px-3 py-1 rounded-full ${results.h1Verdict ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-              H1: {results.h1Verdict ? '✅ Confirmed' : '❌ Not Confirmed'}
+              {results.h1Verdict ? `✅ H1 Supported (Saving = ${results.savingPercent.toFixed(1)}%)` : `❌ H1 Not Supported (Saving = ${results.savingPercent.toFixed(1)}%, below 30% threshold)`}
             </div>
             <div className={`px-3 py-1 rounded-full ${results.h2Verdict ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
-              H2: {results.h2Verdict ? '✅ Viable' : '❌ Not Viable'}
+              {results.h2Verdict ? '✅ H2 Supported' : '❌ H2 Not Supported'}
             </div>
           </div>
         </div>
