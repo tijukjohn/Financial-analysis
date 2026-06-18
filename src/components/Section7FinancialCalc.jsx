@@ -12,7 +12,7 @@ const Section7FinancialCalc = ({ state, results }) => {
     annualLabour,
     annualElectricity,
     annualConsumables,
-    savingRs,
+    savingPerSqFt,
     savingPercent,
     h1Verdict,
     cashFlows,
@@ -104,8 +104,8 @@ const Section7FinancialCalc = ({ state, results }) => {
             <tr>
               <td className="px-4 py-3 font-medium text-slate-700">₹{averageVendorRate.toFixed(2)}</td>
               <td className="px-4 py-3 font-medium text-slate-700">₹{inHouseCostPerSqft.toFixed(2)}</td>
-              <td className="px-4 py-3 font-bold text-green-600">₹{savingRs.toFixed(2)}</td>
-              <td className="px-4 py-3 font-bold text-green-600">{savingPercent.toFixed(1)}%</td>
+              <td className="px-4 py-3 font-bold text-green-600">₹{(savingPerSqFt || 0).toFixed(2)}</td>
+              <td className="px-4 py-3 font-bold text-green-600">{(savingPercent || 0).toFixed(1)}%</td>
               <td className="px-4 py-3">
                 {h1Verdict ? (
                   <div className="flex items-center text-green-600 font-bold bg-green-50 px-2 py-1 rounded inline-flex">
